@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import '../styles/globals.css'
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps } : AppProps) {
   const router = useRouter();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
         router.replace(`/${popupPage}`);
       }
     }
-  }, []);
+  }, [router]);
 
   return <Component {...pageProps} />;
 }
