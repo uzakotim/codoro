@@ -9,7 +9,7 @@ const isProd = process.env.NODE_ENV === 'production';
 // Define the target Next.js page path
 const TARGET_PAGE = 'home';
 
-function createPopupWindow() {
+async function createPopupWindow() {
   const devPort = process.argv[2] || 8888;
 
   popupWindow = new BrowserWindow({
@@ -18,33 +18,22 @@ function createPopupWindow() {
     show: false,
     frame: false,
     resizable: false,
-    movable: false, // Set to true if you want the user to be able to move it
     alwaysOnTop: true,
     skipTaskbar: true,
     transparent: true,
-    // Note: vibrancy/visualEffectState are macOS specific
     vibrancy: 'popover',
-    visualEffectState: 'active',
     webPreferences: {
-      // It's recommended to set contextIsolation: true and use preload scripts,
-      // but keeping your original settings to avoid breaking existing ipcMain logic.
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
-  // FIX: Construct the URL to load the '/home' page correctly in both environments.
-  // In development, it points directly to the server route.
-  // In production (app://./index.html), we use a hash (#) to instruct the Next.js router
-  // to navigate to the correct page once the main app is loaded.
-  const url = isProd
-    ? `app://./index.html#/${TARGET_PAGE}`
-    : `http://localhost:${devPort}/${TARGET_PAGE}`;
-
-  popupWindow.loadURL(url);
-  // Debug line (optional)
-  // popupWindow.webContents.openDevTools();
-
+  if (isProd) {
+    await popupWindow.loadURL('app://./home')
+  } else {
+    const port = process.argv[2]
+    await popupWindow.loadURL(`http://localhost:${port}/home`)
+    // popupWindow.webContents.openDevTools()
+  }
   // Hide the popup when it loses focus (blurs)
   popupWindow.on('blur', () => popupWindow?.hide());
 }
