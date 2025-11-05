@@ -1,5 +1,6 @@
 import path from 'path'
 import { app, BrowserWindow, Tray, nativeImage, screen, ipcMain } from 'electron'
+import { saveData, loadData, deleteData } from './storage';
 
 let tray: Tray | null = null;
 let popupWindow: BrowserWindow | null = null;
@@ -13,8 +14,8 @@ async function createPopupWindow() {
   const devPort = process.argv[2] || 8888;
 
   popupWindow = new BrowserWindow({
-    width: 500,
-    height: 200,
+    width: 300,
+    height: 400,
     show: false,
     frame: false,
     resizable: false,
@@ -116,6 +117,11 @@ app.on('window-all-closed', () => {
 });
 
 // IPC handler example (kept for completeness)
+
+ipcMain.handle('get-data', (_, key, defaultValue) => loadData(key, defaultValue));
+ipcMain.handle('set-data', (_, key, value) => saveData(key, value));
+ipcMain.handle('delete-data', (_, key) => deleteData(key));
+
 ipcMain.on('message', (event, arg) => {
   event.reply('message', `${arg} World!`);
 });
