@@ -24,15 +24,27 @@ const PomodoroCard = () => {
   const getPhaseColor = useCallback(() => {
     switch (currentPhase) {
       case 'pomodoro':
-        return 'from-red-500 to-pink-500';
+        return 'text-red-500';
       case 'shortBreak':
-        return 'from-green-500 to-teal-500';
+        return 'text-green-500';
       case 'longBreak':
-        return 'from-blue-500 to-indigo-500';
+        return 'text-blue-500';
       default:
-        return 'from-gray-500 to-gray-600';
+        return 'text-gray-500';
     }
   }, [currentPhase]);
+  const getPhaseDuration = useCallback(() => {
+    switch (currentPhase) {
+      case 'pomodoro':
+        return settings.pomodoroDuration;
+      case 'shortBreak':
+        return settings.shortBreakDuration;
+      case 'longBreak':
+        return settings.longBreakDuration;
+      default:
+        return 0;
+    }
+  }, [currentPhase, settings]);
 
   const playSound = useCallback((type: string) => {
     // In a real app, you'd load actual audio files.
@@ -67,15 +79,25 @@ const PomodoroCard = () => {
     
     {!showSettings ? (
     <div className="w-full flex flex-col items-center gap-6">
-      <div className={`relative w-48 h-48 md:w-56 md:h-56 rounded-full flex items-center justify-center shadow-inner-lg transition-all duration-500 ease-in-out bg-gradient-to-br ${getPhaseColor()} border-4 border-white border-opacity-30`}>
-        <div className="text-white font-mono text-5xl md:text-6xl font-bold drop-shadow-lg tracking-tight">
-          {formatTime(timer)}
-        </div>
-        <div className="absolute bottom-5 text-md md:text-lg font-semibold text-white text-opacity-90 tracking-wide capitalize">
-          {currentPhase.replace(/([A-Z])/g, ' $1').trim()} Time
-        </div>
-      </div>
+      {/* Radial progress bar */}
+      <div className="relative size-60 flex flex-col items-center">
+        <svg className="size-full -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-neutral-700" stroke-width="2"></circle>
+          {/* add glow effect */}
 
+          <circle cx="18" cy="18" r="16" fill="none" className={`stroke-current ${getPhaseColor()}`} stroke-width="2" stroke-dasharray="100" stroke-dashoffset={`${ (timer / getPhaseDuration()) * 100}`} stroke-linecap="round"></circle>
+        </svg>
+
+        <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+          <span className={`text-center text-5xl font-bold ${getPhaseColor()}`}>
+{formatTime(timer)}
+          </span>
+       
+        </div>
+          <div className={`absolute bottom-1/3  translate-y-1/2 text-md md:text-lg font-semibold ${getPhaseColor()} text-opacity-90 tracking-wide capitalize`}>
+          {currentPhase.replace(/([A-Z])/g, ' $1').trim()} Time
+        </div> 
+      </div>
    
       <div className="flex flex-wrap justify-center gap-3 w-full">
         {!isRunning ? (
