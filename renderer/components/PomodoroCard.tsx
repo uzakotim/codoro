@@ -15,7 +15,7 @@ const PomodoroCard = () => {
     updateSettings,
   } = useTimer();
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
@@ -34,7 +34,7 @@ const PomodoroCard = () => {
     }
   }, [currentPhase]);
 
-  const playSound = useCallback((type) => {
+  const playSound = useCallback((type: string) => {
     // In a real app, you'd load actual audio files.
     // For this example, we'll just log.
     console.log(`Playing ${type} sound!`);
@@ -54,7 +54,7 @@ const PomodoroCard = () => {
   // Simplified settings display/toggle for a compact card
   const [showSettings, setShowSettings] = React.useState(false);
 
-  const handleSettingChange = (e) => {
+  const handleSettingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     updateSettings({
       ...settings,

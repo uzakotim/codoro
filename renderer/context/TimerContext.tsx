@@ -1,6 +1,20 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { getData, setData, deleteData } from './helpers';
-const TimerContext = createContext<any>(null);
+
+interface TimerContextType {
+  timer: number;
+  isRunning: boolean;
+  currentPhase: string;
+  settings: typeof defaultSettings;
+  pomodoroCount: number;
+  completedPomodoros: Date[];
+  startTimer: () => void;
+  pauseTimer: () => void;
+  resetTimer: () => void;
+  skipPhase: () => void;
+  updateSettings: (newSettings: Partial<typeof defaultSettings>) => void;
+}
+const TimerContext = createContext<TimerContextType | null>(null);
 
 const defaultSettings = {
   pomodoroDuration: 25 * 60, // 25 minutes
@@ -9,7 +23,7 @@ const defaultSettings = {
   pomodorosBeforeLongBreak: 4,
 };
 
-export const TimerProvider = ({ children }) => {
+export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     const [settings, setSettings] = useState(defaultSettings);
     const [completedPomodoros, setCompletedPomodoros] = useState<Date[]>([]);
 
@@ -18,7 +32,7 @@ export const TimerProvider = ({ children }) => {
     const [isRunning, setIsRunning] = useState(false);
     const [pomodoroCount, setPomodoroCount] = useState(0); // Completed pomodoros in current cycle
 
-    const intervalRef = useRef(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const resetAll = async () => {
         await deleteData('pomodoroSettings');
         await deleteData('completedPomodoros');
