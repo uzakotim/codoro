@@ -1,9 +1,13 @@
 import React from 'react'
+import { TimerProvider } from '../context/TimerContext';
+import PomodoroCard from '../components/PomodoroCard';
 
 export default function HomePage() {
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-white">Welcome to Codoro!</h1>
-    </div>
+     <TimerProvider>
+      <div className="w-full h-full flex items-center justify-center">
+          <PomodoroCard />
+      </div>
+    </TimerProvider>
   )
 }
