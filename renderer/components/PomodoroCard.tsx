@@ -42,7 +42,8 @@ const PomodoroCard = () => {
       case 'longBreak':
         return settings.longBreakDuration;
       default:
-        return 0;
+        console.error(`Unexpected phase: ${currentPhase}`);
+        return settings.pomodoroDuration; // fallback to pomodoro duration
     }
   }, [currentPhase, settings]);
 
