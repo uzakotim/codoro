@@ -1,21 +1,33 @@
-<p align="center"><img src="./resources/logo.png" alt="Codoro Logo"></p>
+<p align="center"><img src="./resources/logo.png" alt="Codoro Logo" width="200" height="200"></p>
 
 ## Usage
 
 ### Install Dependencies
 ```
-$ cd codoro
-
-# using yarn or npm
-$ yarn (or `npm install`)
+cd codoro
+```
+### Using yarn
+```
+yarn 
+```
+### Using npm
+```
+npm install
 ```
 
-### Use it
-# dev mode
+### Running in dev mode
 ```
-# with yarn
-$ yarn run dev
+yarn run dev
 ```
-# build
-$ yarn build (or `npm run build` or `pnpm run build`)
+or
+```
+npm run dev
+```
+### Build
+```
+yarn build
+```
+or
+```
+npm run build
 ```
