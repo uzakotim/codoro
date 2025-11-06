@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { useTimer } from '../context/TimerContext';
-import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon, Plus } from 'lucide-react';
-
+import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon } from 'lucide-react';
+import { DurationInput } from './DurationInput';
 const PomodoroCard = () => {
   const {
     timer,
@@ -142,123 +142,25 @@ const PomodoroCard = () => {
     (
         <div className="absolute top-0 left-0 w-full h-full p-6 flex flex-col items-center justify-center gap-4 animate-fade-in z-10">
           <h3 className="text-2xl font-bold text-white mb-1">Timer Settings</h3>
-          <label className="flex flex-col items-center text-white w-full">
-            Pomodoro (min): 
-            <div className="flex items-center mt-1 justify-center space-x-2">
-              
-              <input
-                type="number"
-                name="pomodoroDuration"
-                value={settings.pomodoroDuration / 60}
-                onChange={handleSettingChange}
-                className="mt-1 p-2 mb-1 rounded-lg bg-white bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-blue-600 text-white placeholder-white::placeholder w-24 text-center"
-                min="1"
-              />
-              <div className='flex flex-col justify-center items-center'>
-              <button
-                className="w-5 h-5 text-center bg-blue-600 text-xs text-white rounded-md hover:bg-blue-700 focus:outline-none"
-                // onClick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                onClick = {() => {
-                  const input = document.querySelector('input[name="pomodoroDuration"]') as HTMLInputElement;
-                  input.stepUp();
-                  handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
-                }
-                }
-              >+</button>
-              <button
-                className="w-5 h-5 mt-1 border border-1 border-blue-600 text-xs text-white rounded-md hover:border-blue-700 focus:outline-none"
-                // onClick= "this.parentNode.querySelector('input[type=number]').stepDown()"
-                onClick = {() => {
-                  const input = document.querySelector('input[name="pomodoroDuration"]') as HTMLInputElement;
-                  input.stepDown();
-                  handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
-                }
-                }
-              >
-                -
-              </button>
-              </div>
-              
-            </div>
-          </label>
-          <label className="flex flex-col items-center text-white w-full">
-            Short Break (min):
-            <div className="flex items-center mt-1 justify-center space-x-2">
-              <input
-                type="number"
-                name="shortBreakDuration"
-                value={settings.shortBreakDuration / 60}
-                onChange={handleSettingChange}
-                className="mt-1 p-2 mb-1 rounded-lg bg-white bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-blue-600 text-white placeholder-white::placeholder w-24 text-center"
-                min="1"
-              />
-              <div className='flex flex-col justify-center items-center'>
-                <button
-                  className="w-5 h-5 bg-blue-600 text-xs text-white rounded-md hover:bg-blue-700 focus:outline-none"
-                  // onClick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                  onClick = {() => {
-                    const input = document.querySelector('input[name="shortBreakDuration"]') as HTMLInputElement;
-                    input.stepUp();
-                    handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
-                  }
-                  }
-                >
-                  +
-                </button>
-                <button
-                  className="w-5 h-5 mt-1 border border-1 border-blue-600 text-xs text-white rounded-md hover:border-blue-700 focus:outline-none"
-                  // onClick= "this.parentNode.querySelector('input[type=number]').stepDown()"
-                  onClick = {() => {
-                    const input = document.querySelector('input[name="shortBreakDuration"]') as HTMLInputElement;
-                    input.stepDown();
-                    handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
-                  }
-                  }
-                >
-                  -
-                </button>
-              </div>
-            </div>
-          </label>
-          <label className="flex flex-col items-center text-white w-full">
-            Long Break (min):
-            <div className="flex items-center mt-1 justify-center space-x-2">
-            <input
-              type="number"
-              name="longBreakDuration"
-              value={settings.longBreakDuration / 60}
-              onChange={handleSettingChange}
-              className="mt-1 p-2 mb-1 rounded-lg bg-white bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-blue-600 text-white placeholder-white::placeholder w-24 text-center"
-              min="1"
-            />
-            <div className='flex flex-col justify-center items-center'>
-                <button
-                  className="w-5 h-5 bg-blue-600 text-xs text-white rounded-md hover:bg-blue-700 focus:outline-none"
-                  // onClick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                  onClick = {() => {
-                    const input = document.querySelector('input[name="longBreakDuration"]') as HTMLInputElement;
-                    input.stepUp();
-                    handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
-                  }
-                  }
-                >
-                  +
-                </button>
-                <button
-                  className="w-5 h-5 mt-1 border border-1 border-blue-600 text-xs text-white rounded-md hover:border-blue-700 focus:outline-none"
-                  // onClick= "this.parentNode.querySelector('input[type=number]').stepDown()"
-                  onClick = {() => {
-                    const input = document.querySelector('input[name="longBreakDuration"]') as HTMLInputElement;
-                    input.stepDown();
-                    handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
-                  }
-                  }
-                >
-                  -
-                </button>
-              </div>
-            </div>
-          </label>
+          <DurationInput 
+            label="Pomodoro (min):"
+            name="pomodoroDuration"
+            value={settings.pomodoroDuration / 60}
+            onChange={handleSettingChange}
+          />
+          <DurationInput 
+            label="Short Break (min):"
+            name="shortBreakDuration"
+            value={settings.shortBreakDuration / 60}
+            onChange={handleSettingChange}
+          />
+
+          <DurationInput 
+           label="Long Break (min):"
+           name="longBreakDuration"
+           value={settings.longBreakDuration / 60}
+           onChange={handleSettingChange}
+         />
           <button
             onClick={() => setShowSettings(false)}
             className="px-6 py-2 rounded-2xl border-2 border-orange-500 text-white font-bold text-md shadow-lg hover:border-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
