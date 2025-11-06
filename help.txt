@@ -1,0 +1,58 @@
+""""
+"ERROR: ESM reading electron:"
+"SOLUTION: use electron-store older version for older electron package like 27"
+""""
+
+""""
+"HINT: run your app from terminal for debugging
+cd dist/mac-arm64
+./YourApp.app/Contents/MacOS/YourApp
+"
+""""
+
+""""
+"ERROR: Absent files from resources folder into Contents/Resources of built app"
+"SOLUTION: package.json
+ "build": {
+    "appId": "com.example.codoro",
+    "productName": "Codoro",
+    "mac": {
+      "icon": "resources/icon.icns"
+    },
+    "win": {
+      "icon": "resources/icon.ico"
+    },
+    "linux": {
+      "icon": "build/icons/icon.png"
+    },
+    "extraResources": ["./resources/**"]
+  },
+
+  electron-builder.yml
+
+  directories:
+  output: dist
+  buildResources: resources
+    extraResources:
+    - resources/**
+  files:
+    - resources/**
+    - app/**
+    - renderer/out/**
+    - from: .
+        filter:
+        - package.json
+        - app
+    publish: null
+
+
+""""
+
+
+
+""""
+HINT
+Console out the paths of exported files and home page location
+Use try catch block to find errors
+""""
+

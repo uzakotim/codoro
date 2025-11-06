@@ -1,38 +1,21 @@
-<p align="center"><img src="https://i.imgur.com/a9QWW0v.png"></p>
+<p align="center"><img src="./resources/logo.png" alt="Codoro Logo"></p>
 
 ## Usage
 
-### Create an App
-
-```
-# with npx
-$ npx create-nextron-app my-app --example with-tailwindcss
-
-# with yarn
-$ yarn create nextron-app my-app --example with-tailwindcss
-
-# with pnpm
-$ pnpm dlx create-nextron-app my-app --example with-tailwindcss
-```
-
 ### Install Dependencies
-
 ```
-$ cd my-app
+$ cd codoro
 
 # using yarn or npm
 $ yarn (or `npm install`)
-
-# using pnpm
-$ pnpm install --shamefully-hoist
 ```
 
 ### Use it
-
+# dev mode
 ```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
-
-# production build
+# with yarn
+$ yarn run dev
+```
+# build
 $ yarn build (or `npm run build` or `pnpm run build`)
 ```
