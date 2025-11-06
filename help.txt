@@ -52,7 +52,7 @@ cd dist/mac-arm64
 
 """"
 HINT
-Console out the pathes of exported files and home page location
-Use try catch block to find erros
+Console out the paths of exported files and home page location
+Use try catch block to find errors
 """"
 

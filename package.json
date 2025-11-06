@@ -6,7 +6,7 @@
   "author": "Timur Uzakov <timauzakov@gmail.com>",
   "main": "app/background.js",
   "build": {
-    "appId": "com.example.codoro",
+    "appId": "com.codoro.app",
     "productName": "Codoro",
     "mac": {
       "icon": "resources/icon.icns"
@@ -15,7 +15,7 @@
       "icon": "resources/icon.ico"
     },
     "linux": {
-      "icon": "build/icons/icon.png"
+      "icon": "resources/logo.png"
     },
     "extraResources": [
       "./resources/**"
