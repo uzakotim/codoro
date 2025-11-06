@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { useTimer } from '../context/TimerContext';
 import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon } from 'lucide-react';
-
+import { DurationInput } from './DurationInput';
 const PomodoroCard = () => {
   const {
     timer,
@@ -82,7 +82,7 @@ const PomodoroCard = () => {
           {/* Radial progress bar */}
           <div className="relative size-60 flex flex-col items-center">
             <svg className="size-full -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-neutral-700" strokeWidth="2"></circle>
+              <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-neutral-700" strokeWidth="2"></circle>
               <circle cx="18" cy="18" r="16" fill="none" className={`stroke-current ${getPhaseColor()}`} strokeWidth="2" strokeDasharray="100" strokeDashoffset={`${ (timer / getPhaseDuration()) * 100}`} strokeLinecap="round"></circle>
             </svg>
 
@@ -101,14 +101,14 @@ const PomodoroCard = () => {
             {!isRunning ? (
               <button
                 onClick={startTimer}
-                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-md shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-75 min-w-[100px]"
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl border-2 border-blue-600 text-white font-bold text-md  hover:border-blue-700 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-opacity-75 min-w-[100px]"
               >
                 <Play size={20} /> Start
               </button>
             ) : (
               <button
                 onClick={pauseTimer}
-                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-md shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-opacity-75 min-w-[100px]"
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl border-2 border-purple-600 text-white font-bold text-md hover:border-purple-700  transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-opacity-75 min-w-[100px]"
               >
                 <Pause size={20} /> Pause
               </button>
@@ -116,14 +116,14 @@ const PomodoroCard = () => {
 
             <button
               onClick={resetTimer}
-              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-20 text-white font-bold text-md shadow-lg hover:bg-opacity-30 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-10 text-white font-bold text-md  hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
             >
               <RotateCcw size={20} /> Reset
             </button>
 
             <button
               onClick={skipPhase}
-              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-20 text-white font-bold text-md shadow-lg hover:bg-opacity-30 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-10 text-white font-bold text-md  hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
             >
               <FastForward size={20} /> Skip
             </button>
@@ -131,7 +131,7 @@ const PomodoroCard = () => {
 
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white bg-opacity-20 text-white hover:bg-opacity-30 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+            className="absolute top-4 right-4 p-2 rounded-full bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
             aria-label="Toggle settings"
           >
             <SettingsIcon size={20} />
@@ -141,43 +141,29 @@ const PomodoroCard = () => {
     :
     (
         <div className="absolute top-0 left-0 w-full h-full p-6 flex flex-col items-center justify-center gap-4 animate-fade-in z-10">
-          <h3 className="text-2xl font-bold text-white mb-2">Timer Settings</h3>
-          <label className="flex flex-col items-center text-white w-full">
-            Pomodoro (min):
-            <input
-              type="number"
-              name="pomodoroDuration"
-              value={settings.pomodoroDuration / 60}
-              onChange={handleSettingChange}
-              className="mt-1 p-2 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-pink-300 text-white placeholder-white::placeholder w-24 text-center"
-              min="1"
-            />
-          </label>
-          <label className="flex flex-col items-center text-white w-full">
-            Short Break (min):
-            <input
-              type="number"
-              name="shortBreakDuration"
-              value={settings.shortBreakDuration / 60}
-              onChange={handleSettingChange}
-              className="mt-1 p-2 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-pink-300 text-white placeholder-white::placeholder w-24 text-center"
-              min="1"
-            />
-          </label>
-          <label className="flex flex-col items-center text-white w-full">
-            Long Break (min):
-            <input
-              type="number"
-              name="longBreakDuration"
-              value={settings.longBreakDuration / 60}
-              onChange={handleSettingChange}
-              className="mt-1 p-2 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-pink-300 text-white placeholder-white::placeholder w-24 text-center"
-              min="1"
-            />
-          </label>
+          <h3 className="text-2xl font-bold text-white mb-1">Timer Settings</h3>
+          <DurationInput 
+            label="Pomodoro (min):"
+            name="pomodoroDuration"
+            value={settings.pomodoroDuration / 60}
+            onChange={handleSettingChange}
+          />
+          <DurationInput 
+            label="Short Break (min):"
+            name="shortBreakDuration"
+            value={settings.shortBreakDuration / 60}
+            onChange={handleSettingChange}
+          />
+
+          <DurationInput 
+           label="Long Break (min):"
+           name="longBreakDuration"
+           value={settings.longBreakDuration / 60}
+           onChange={handleSettingChange}
+         />
           <button
             onClick={() => setShowSettings(false)}
-            className="mt-4 px-6 py-2 rounded-2xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold text-md shadow-lg hover:from-red-600 hover:to-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
+            className="px-6 py-2 rounded-2xl border-2 border-orange-500 text-white font-bold text-md  hover:border-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
           >
             Close
           </button>

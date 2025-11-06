@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { getData, setData, deleteData } from './helpers';
+import useSound from 'use-sound';
 
 interface TimerContextType {
   timer: number;
@@ -31,6 +32,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     const [timer, setTimer] = useState(settings.pomodoroDuration);
     const [isRunning, setIsRunning] = useState(false);
     const [pomodoroCount, setPomodoroCount] = useState(0); // Completed pomodoros in current cycle
+    const [play] = useSound('/sounds/new-notification.mp3', { volume: 0.5 });
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const resetAll = async () => {
@@ -74,6 +76,8 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
       // Phase transition logic is now also triggered by `skipPhase` which is called when timer hits 0
+      // Play sound
+      play();
     } else if (!isRunning && intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -84,7 +88,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, timer]);
+  }, [isRunning, timer,play]);
 
   // Effect to update timer when settings change or phase changes
   useEffect(() => {
