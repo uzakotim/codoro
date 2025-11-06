@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useTimer } from '../context/TimerContext';
-import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon } from 'lucide-react';
+import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon, Plus } from 'lucide-react';
 
 const PomodoroCard = () => {
   const {
@@ -101,14 +101,14 @@ const PomodoroCard = () => {
             {!isRunning ? (
               <button
                 onClick={startTimer}
-                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-md shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-75 min-w-[100px]"
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl border-2 border-blue-600 text-white font-bold text-md shadow-lg hover:border-blue-700 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-opacity-75 min-w-[100px]"
               >
                 <Play size={20} /> Start
               </button>
             ) : (
               <button
                 onClick={pauseTimer}
-                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-md shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-opacity-75 min-w-[100px]"
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl border-2 border-purple-600 text-white font-bold text-md shadow-lg hover:border-purple-700  transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-opacity-75 min-w-[100px]"
               >
                 <Pause size={20} /> Pause
               </button>
@@ -116,14 +116,14 @@ const PomodoroCard = () => {
 
             <button
               onClick={resetTimer}
-              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-20 text-white font-bold text-md shadow-lg hover:bg-opacity-30 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-10 text-white font-bold text-md shadow-lg hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
             >
               <RotateCcw size={20} /> Reset
             </button>
 
             <button
               onClick={skipPhase}
-              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-20 text-white font-bold text-md shadow-lg hover:bg-opacity-30 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-10 text-white font-bold text-md shadow-lg hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
             >
               <FastForward size={20} /> Skip
             </button>
@@ -131,7 +131,7 @@ const PomodoroCard = () => {
 
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white bg-opacity-20 text-white hover:bg-opacity-30 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+            className="absolute top-4 right-4 p-2 rounded-full bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
             aria-label="Toggle settings"
           >
             <SettingsIcon size={20} />
@@ -141,43 +141,127 @@ const PomodoroCard = () => {
     :
     (
         <div className="absolute top-0 left-0 w-full h-full p-6 flex flex-col items-center justify-center gap-4 animate-fade-in z-10">
-          <h3 className="text-2xl font-bold text-white mb-2">Timer Settings</h3>
+          <h3 className="text-2xl font-bold text-white mb-1">Timer Settings</h3>
           <label className="flex flex-col items-center text-white w-full">
-            Pomodoro (min):
-            <input
-              type="number"
-              name="pomodoroDuration"
-              value={settings.pomodoroDuration / 60}
-              onChange={handleSettingChange}
-              className="mt-1 p-2 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-pink-300 text-white placeholder-white::placeholder w-24 text-center"
-              min="1"
-            />
+            Pomodoro (min): 
+            <div className="flex items-center mt-1 justify-center space-x-2">
+              
+              <input
+                type="number"
+                name="pomodoroDuration"
+                value={settings.pomodoroDuration / 60}
+                onChange={handleSettingChange}
+                className="mt-1 p-2 mb-1 rounded-lg bg-white bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-blue-600 text-white placeholder-white::placeholder w-24 text-center"
+                min="1"
+              />
+              <div className='flex flex-col justify-center items-center'>
+              <button
+                className="w-5 h-5 text-center bg-blue-600 text-xs text-white rounded-md hover:bg-blue-700 focus:outline-none"
+                // onClick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                onClick = {() => {
+                  const input = document.querySelector('input[name="pomodoroDuration"]') as HTMLInputElement;
+                  input.stepUp();
+                  handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
+                }
+                }
+              >+</button>
+              <button
+                className="w-5 h-5 mt-1 border border-1 border-blue-600 text-xs text-white rounded-md hover:border-blue-700 focus:outline-none"
+                // onClick= "this.parentNode.querySelector('input[type=number]').stepDown()"
+                onClick = {() => {
+                  const input = document.querySelector('input[name="pomodoroDuration"]') as HTMLInputElement;
+                  input.stepDown();
+                  handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
+                }
+                }
+              >
+                -
+              </button>
+              </div>
+              
+            </div>
           </label>
           <label className="flex flex-col items-center text-white w-full">
             Short Break (min):
-            <input
-              type="number"
-              name="shortBreakDuration"
-              value={settings.shortBreakDuration / 60}
-              onChange={handleSettingChange}
-              className="mt-1 p-2 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-pink-300 text-white placeholder-white::placeholder w-24 text-center"
-              min="1"
-            />
+            <div className="flex items-center mt-1 justify-center space-x-2">
+              <input
+                type="number"
+                name="shortBreakDuration"
+                value={settings.shortBreakDuration / 60}
+                onChange={handleSettingChange}
+                className="mt-1 p-2 mb-1 rounded-lg bg-white bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-blue-600 text-white placeholder-white::placeholder w-24 text-center"
+                min="1"
+              />
+              <div className='flex flex-col justify-center items-center'>
+                <button
+                  className="w-5 h-5 bg-blue-600 text-xs text-white rounded-md hover:bg-blue-700 focus:outline-none"
+                  // onClick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                  onClick = {() => {
+                    const input = document.querySelector('input[name="shortBreakDuration"]') as HTMLInputElement;
+                    input.stepUp();
+                    handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
+                  }
+                  }
+                >
+                  +
+                </button>
+                <button
+                  className="w-5 h-5 mt-1 border border-1 border-blue-600 text-xs text-white rounded-md hover:border-blue-700 focus:outline-none"
+                  // onClick= "this.parentNode.querySelector('input[type=number]').stepDown()"
+                  onClick = {() => {
+                    const input = document.querySelector('input[name="shortBreakDuration"]') as HTMLInputElement;
+                    input.stepDown();
+                    handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
+                  }
+                  }
+                >
+                  -
+                </button>
+              </div>
+            </div>
           </label>
           <label className="flex flex-col items-center text-white w-full">
             Long Break (min):
+            <div className="flex items-center mt-1 justify-center space-x-2">
             <input
               type="number"
               name="longBreakDuration"
               value={settings.longBreakDuration / 60}
               onChange={handleSettingChange}
-              className="mt-1 p-2 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-pink-300 text-white placeholder-white::placeholder w-24 text-center"
+              className="mt-1 p-2 mb-1 rounded-lg bg-white bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-blue-600 text-white placeholder-white::placeholder w-24 text-center"
               min="1"
             />
+            <div className='flex flex-col justify-center items-center'>
+                <button
+                  className="w-5 h-5 bg-blue-600 text-xs text-white rounded-md hover:bg-blue-700 focus:outline-none"
+                  // onClick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                  onClick = {() => {
+                    const input = document.querySelector('input[name="longBreakDuration"]') as HTMLInputElement;
+                    input.stepUp();
+                    handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
+                  }
+                  }
+                >
+                  +
+                </button>
+                <button
+                  className="w-5 h-5 mt-1 border border-1 border-blue-600 text-xs text-white rounded-md hover:border-blue-700 focus:outline-none"
+                  // onClick= "this.parentNode.querySelector('input[type=number]').stepDown()"
+                  onClick = {() => {
+                    const input = document.querySelector('input[name="longBreakDuration"]') as HTMLInputElement;
+                    input.stepDown();
+                    handleSettingChange({ target: input } as React.ChangeEvent<HTMLInputElement>);
+                  }
+                  }
+                >
+                  -
+                </button>
+              </div>
+            </div>
           </label>
           <button
             onClick={() => setShowSettings(false)}
-            className="mt-4 px-6 py-2 rounded-2xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold text-md shadow-lg hover:from-red-600 hover:to-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
+            className="px-6 py-2 rounded-2xl border-2 border-orange-500 text-white font-bold text-md shadow-lg hover:border-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
           >
             Close
           </button>
