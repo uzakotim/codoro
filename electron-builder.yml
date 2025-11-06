@@ -1,10 +1,15 @@
-appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+appId: com.example.codoro
+productName: Codoro
+copyright: Copyright © 2025 Timur Uzakov
 directories:
   output: dist
   buildResources: resources
+extraResources:
+  - resources/**
 files:
+  - resources/**
+  - app/**
+  - renderer/out/**
   - from: .
     filter:
       - package.json

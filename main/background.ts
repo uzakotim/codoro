@@ -1,18 +1,16 @@
 import path from 'path'
-import { app, BrowserWindow, Tray, nativeImage, screen, ipcMain } from 'electron'
+import { app, BrowserWindow,protocol, Tray, nativeImage, screen, ipcMain, } from 'electron'
 import { saveData, loadData, deleteData } from './storage';
-
+import fs from 'fs';
 let tray: Tray | null = null;
 let popupWindow: BrowserWindow | null = null;
 
 const isProd = process.env.NODE_ENV === 'production';
-
 // Define the target Next.js page path
 const TARGET_PAGE = 'home';
 
 async function createPopupWindow() {
   const devPort = process.argv[2] || 8888;
-
   popupWindow = new BrowserWindow({
     width: 300,
     height: 400,
@@ -25,11 +23,12 @@ async function createPopupWindow() {
     vibrancy: 'popover',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   });
-
   if (isProd) {
-    await popupWindow.loadURL('app://./home')
+    await popupWindow.loadURL('app://./home');
   } else {
     const port = process.argv[2]
     await popupWindow.loadURL(`http://localhost:${port}/home`)
@@ -80,11 +79,13 @@ function togglePopup(bounds: Electron.Rectangle) {
  */
 function createTray() {
   // Determine the path to the icon file
-  const iconPath = path.join(
-    // In production, the resources are placed directly next to the main process executable
-    app.isPackaged ? process.resourcesPath : __dirname,
-    '../resources/iconTemplate.png'
-  );
+
+  let iconPath = "";
+  if (app.isPackaged) {
+    iconPath = path.join(process.resourcesPath,"resources",'iconTemplate.png');
+  } else {
+    iconPath = path.join(__dirname, '../resources/iconTemplate.png');
+  }
 
   // Create the native image, enabling template image for better dark mode support on macOS
   const trayIcon = nativeImage.createFromPath(iconPath).resize({ width: 24, height: 24 });
@@ -103,8 +104,32 @@ function createTray() {
   console.log('✅ Tray icon created');
 }
 
+
 // App lifecycle setup
 app.whenReady().then(() => {
+  if (isProd) {
+    protocol.registerFileProtocol('app', (request, callback) => {
+    // Remove app://./ prefix
+    let urlPath = request.url.replace('app://./', '');
+
+    // Map page URLs to index.html
+    const pageFile = path.join(__dirname, urlPath, 'index.html');
+    if (fs.existsSync(pageFile)) {
+      callback({ path: pageFile });
+      return;
+    }
+
+    // Serve static assets (_next/static)
+    const staticFile = path.join(__dirname, urlPath);
+    if (fs.existsSync(staticFile)) {
+      callback({ path: staticFile });
+      return;
+    }
+
+    console.error('❌ File not found for app:// URL:', urlPath);
+    callback({ error: -6 }); // ERR_FILE_NOT_FOUND
+  });
+  }
   createTray();
   createPopupWindow();
 });
