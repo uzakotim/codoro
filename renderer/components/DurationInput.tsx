@@ -30,7 +30,7 @@ export function DurationInput ({
           name={name}
           value={value}
           onChange={onChange}
-          className="mt-1 p-2 mb-1 rounded-lg bg-white bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-blue-600 text-white placeholder-white::placeholder w-24 text-center"
+          className="mt-1 p-2 mb-1 rounded-lg bg-white bg-opacity-10 focus:outline-none focus:ring-1 focus:ring-blue-600 text-white placeholder:text-white w-24 text-center"
           min="1"
         />
         <div className='flex flex-col justify-center items-center'>

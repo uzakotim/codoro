@@ -82,7 +82,7 @@ const PomodoroCard = () => {
           {/* Radial progress bar */}
           <div className="relative size-60 flex flex-col items-center">
             <svg className="size-full -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-neutral-700" strokeWidth="2"></circle>
+              <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-neutral-700" strokeWidth="2"></circle>
               <circle cx="18" cy="18" r="16" fill="none" className={`stroke-current ${getPhaseColor()}`} strokeWidth="2" strokeDasharray="100" strokeDashoffset={`${ (timer / getPhaseDuration()) * 100}`} strokeLinecap="round"></circle>
             </svg>
 
@@ -101,14 +101,14 @@ const PomodoroCard = () => {
             {!isRunning ? (
               <button
                 onClick={startTimer}
-                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl border-2 border-blue-600 text-white font-bold text-md shadow-lg hover:border-blue-700 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-opacity-75 min-w-[100px]"
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl border-2 border-blue-600 text-white font-bold text-md  hover:border-blue-700 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-opacity-75 min-w-[100px]"
               >
                 <Play size={20} /> Start
               </button>
             ) : (
               <button
                 onClick={pauseTimer}
-                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl border-2 border-purple-600 text-white font-bold text-md shadow-lg hover:border-purple-700  transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-opacity-75 min-w-[100px]"
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl border-2 border-purple-600 text-white font-bold text-md hover:border-purple-700  transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-opacity-75 min-w-[100px]"
               >
                 <Pause size={20} /> Pause
               </button>
@@ -116,14 +116,14 @@ const PomodoroCard = () => {
 
             <button
               onClick={resetTimer}
-              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-10 text-white font-bold text-md shadow-lg hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-10 text-white font-bold text-md  hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
             >
               <RotateCcw size={20} /> Reset
             </button>
 
             <button
               onClick={skipPhase}
-              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-10 text-white font-bold text-md shadow-lg hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white bg-opacity-10 text-white font-bold text-md  hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 min-w-[100px]"
             >
               <FastForward size={20} /> Skip
             </button>
@@ -163,7 +163,7 @@ const PomodoroCard = () => {
          />
           <button
             onClick={() => setShowSettings(false)}
-            className="px-6 py-2 rounded-2xl border-2 border-orange-500 text-white font-bold text-md shadow-lg hover:border-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
+            className="px-6 py-2 rounded-2xl border-2 border-orange-500 text-white font-bold text-md  hover:border-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
           >
             Close
           </button>
