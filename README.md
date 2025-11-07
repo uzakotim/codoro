@@ -1,8 +1,10 @@
 
-<div align="center">
-  <img src="./resources/logo.png" alt="Codoro Logo" width="80" height="80" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
-  <h1 style="display: inline-block; vertical-align: middle; margin: 0;">Codoro</h1>
-</div>
+<table align="center">
+  <tr>
+    <td><img src="./resources/logo.png" alt="Codoro Logo" width="80" height="80"></td>
+    <td><h1>Codoro</h1></td>
+  </tr>
+</table>
 
 ## Usage
 
