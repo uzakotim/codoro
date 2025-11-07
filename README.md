@@ -48,7 +48,7 @@ Now your app can toggle Focus mode.
 ### Running in dev mode
 
 ```
-yarn run dev
+yarn dev
 ```
 
 or
