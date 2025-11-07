@@ -9,7 +9,7 @@
 ## Demo
 
 <p align="center">
-  <img src="./resources/demo.png" width="600" height="400" alt="Codoro Demo">
+  <img src="./resources/demo.png"  alt="Codoro Demo">
 </p>
 ## Usage
 
