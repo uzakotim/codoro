@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "electron-store": "^7.0.2",
+    "fs": "^0.0.1-security",
     "lucide-react": "^0.552.0",
     "use-sound": "^5.0.0"
   },

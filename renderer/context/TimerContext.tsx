@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import { getData, setData, deleteData } from './helpers';
+import { getData, setData, deleteData, launchEditor } from './helpers';
 import useSound from 'use-sound';
 
 interface TimerContextType {
@@ -99,6 +99,10 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [currentPhase, settings]); // Depend on currentPhase and settings
 
   const startTimer = useCallback(() => {
+    if (currentPhase === 'pomodoro') {
+      console.log(`Starting pomodoro, launching editor: ${settings.codeEditor}`);
+      launchEditor(settings.codeEditor); // Launch code editor when starting a pomodoro
+    }
     setIsRunning(true);
   }, []);
 

@@ -12,3 +12,8 @@ export async function deleteData(key: string) {
   if (typeof window === 'undefined' || !window.electron) return;
   return await window.electron.ipcRenderer.invoke('delete-data', key);
 }
+
+export async function launchEditor(appName?: string) {
+  if (typeof window === 'undefined' || !window.electron) return;
+  return await window.electron.ipcRenderer.invoke('launch-editor', appName);
+}

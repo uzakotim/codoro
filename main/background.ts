@@ -4,6 +4,7 @@ import { saveData, loadData, deleteData } from './storage';
 import fs from 'fs';
 let tray: Tray | null = null;
 let popupWindow: BrowserWindow | null = null;
+import { exec } from 'child_process';
 
 const isProd = process.env.NODE_ENV === 'production';
 // Define the target Next.js page path
@@ -146,6 +147,32 @@ app.on('window-all-closed', () => {
 ipcMain.handle('get-data', (_, key, defaultValue) => loadData(key, defaultValue));
 ipcMain.handle('set-data', (_, key, value) => saveData(key, value));
 ipcMain.handle('delete-data', (_, key) => deleteData(key));
+ipcMain.handle('launch-editor', async (event, appName: string) => {
+  return new Promise((resolve, reject) => {
+    if (!appName) return reject('App name not provided');
+    console.log(`Request to launch editor: ${appName}`);
+    // Derive process name (macOS app process names are usually short)
+    const processName = appName.includes('Visual Studio') ? 'Code' : appName;
+
+    exec(`pgrep -x "${processName}"`, (err, stdout) => {
+      if (stdout.trim()) {
+        console.log(`${appName} is already running.`);
+        resolve('already-running');
+      } else {
+        console.log(`Launching ${appName}...`);
+        exec(`open -a "${appName}"`, (error) => {
+          if (error) {
+            console.error(`Failed to launch ${appName}:`, error);
+            reject(error);
+          } else {
+            resolve('launched');
+          }
+        });
+      }
+    });
+  });
+});
+
 
 ipcMain.on('message', (event, arg) => {
   event.reply('message', `${arg} World!`);

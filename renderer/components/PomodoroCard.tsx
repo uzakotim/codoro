@@ -3,8 +3,6 @@ import { useTimer } from '../context/TimerContext';
 import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon, Wrench } from 'lucide-react';
 import { DurationInput } from './DurationInput';
 import { LinkInput } from './LinkInput';
-import { isNumberObject } from 'util/types';
-import { isNumber } from 'util';
 const PomodoroCard = () => {
   const {
     timer,
