@@ -1,10 +1,8 @@
 
-<div align="center" stlye="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: #1e1e1e; "> 
-  <p align="center">
-    <img src="./resources/logo.png" alt="Codoro Logo" width="150" height="150">
-  </p>
-  <h1 align="center">Codoro</h1> 
-</div>
+<p align="center" width="100%" background-color="black">
+  <img src="./resources/logo.png" alt="Codoro Logo" width="150" height="150">
+</p>
+<h1 align="center">Codoro</h1> 
 
 ## Usage
 
