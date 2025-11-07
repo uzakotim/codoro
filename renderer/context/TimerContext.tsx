@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import { getData, setData, deleteData, launchEditor } from './helpers';
+import { getData, setData, deleteData, launchEditor, enableDND, disableDND } from './helpers';
 import useSound from 'use-sound';
 
 interface TimerContextType {
@@ -101,9 +101,13 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   const startTimer = useCallback(() => {
     if (currentPhase === 'pomodoro') {
       launchEditor(settings.codeEditor); // Launch code editor when starting a pomodoro
+      enableDND(settings.focusOnShortcut); // Enable Do Not Disturb
+    }
+    else {
+      disableDND(settings.focusOffShortcut); // Disable Do Not Disturb on breaks
     }
     setIsRunning(true);
-  }, [settings]);
+  }, [settings, currentPhase]);
 
   const pauseTimer = useCallback(() => {
     setIsRunning(false);

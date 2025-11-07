@@ -172,6 +172,29 @@ ipcMain.handle('launch-editor', async (event, appName: string) => {
     });
   });
 });
+ipcMain.handle('set-dnd', async (event, onFocuseName?: string) => {
+  const shortcutName = onFocuseName || "Enable Do Not Disturb";
+  const script = `osascript -e 'tell application "Shortcuts Events" to run the shortcut "${shortcutName}"'`;
+  exec(script, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Failed to run shortcut "${shortcutName}":`, error);
+    } else {
+      console.log(`Successfully ran shortcut "${shortcutName}"`);
+    }
+  });
+});
+ipcMain.handle('disable-dnd', async (event,offFocusName?: string) => {
+  const shortcutName = offFocusName || "Disable Do Not Disturb";
+  const script = `osascript -e 'tell application "Shortcuts Events" to run the shortcut "${shortcutName}"'`;
+  exec(script, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Failed to run shortcut "${shortcutName}":`, error);
+    } else {
+      console.log(`Successfully ran shortcut "${shortcutName}"`);
+    }
+  });
+});
+
 
 
 ipcMain.on('message', (event, arg) => {
