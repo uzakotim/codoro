@@ -1,8 +1,8 @@
 
-<p align="center" style="background-color: black;">
-  <img src="./resources/logo.png" alt="Codoro Logo" width="150" height="150">
-</p>
-<h1 align="center">Codoro</h1> 
+<div align="center">
+  <img src="./resources/logo.png" alt="Codoro Logo" width="80" height="80" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+  <h1 style="display: inline-block; vertical-align: middle; margin: 0;">Codoro</h1>
+</div>
 
 ## Usage
 
