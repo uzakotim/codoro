@@ -22,6 +22,9 @@ const defaultSettings = {
   shortBreakDuration: 5 * 60,  // 5 minutes
   longBreakDuration: 15 * 60, // 15 minutes
   pomodorosBeforeLongBreak: 4,
+  codeEditor: 'Visual Studio Code', // default code editor command
+  focusOnShortcut: 'Enable Do Not Disturb',
+  focusOffShortcut: 'Disable Do Not Disturb',
 };
 
 export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
@@ -160,6 +163,9 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
       shortBreakDuration: newSettings.shortBreakDuration || defaultSettings.shortBreakDuration,
       longBreakDuration: newSettings.longBreakDuration || defaultSettings.longBreakDuration,
       pomodorosBeforeLongBreak: newSettings.pomodorosBeforeLongBreak || defaultSettings.pomodorosBeforeLongBreak,
+      codeEditor: newSettings.codeEditor || defaultSettings.codeEditor,
+      focusOnShortcut: newSettings.focusOnShortcut || defaultSettings.focusOnShortcut,
+      focusOffShortcut: newSettings.focusOffShortcut || defaultSettings.focusOffShortcut,
     };
     setSettings(updatedSettings);
     // The useEffect dependent on [currentPhase, settings] will handle timer update
