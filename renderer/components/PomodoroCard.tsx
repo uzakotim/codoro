@@ -139,14 +139,20 @@ const PomodoroCard = () => {
           </div>
 
           <button
-            onClick={() => setShowSettings(!showSettings)}
+            onClick={() => {
+              setShowSettings(!showSettings)
+              setShowLinkSettings(false)
+            }}
             className="absolute top-4 right-4 p-2 rounded-full bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
             aria-label="Toggle settings"
           >
             <SettingsIcon size={20} />
           </button>
           <button
-            onClick={() => setShowLinkSettings(!showLinkSettings)}
+            onClick={() => {
+              setShowSettings(false);
+              setShowLinkSettings(!showLinkSettings);
+           }}
             className="absolute top-4 left-4 p-2 rounded-full bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
             aria-label="Toggle link settings"
           >
