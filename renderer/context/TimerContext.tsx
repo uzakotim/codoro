@@ -100,11 +100,10 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const startTimer = useCallback(() => {
     if (currentPhase === 'pomodoro') {
-      console.log(`Starting pomodoro, launching editor: ${settings.codeEditor}`);
       launchEditor(settings.codeEditor); // Launch code editor when starting a pomodoro
     }
     setIsRunning(true);
-  }, []);
+  }, [settings]);
 
   const pauseTimer = useCallback(() => {
     setIsRunning(false);
