@@ -205,12 +205,14 @@ const PomodoroCard = () => {
           <LinkInput 
             label="Focus on shortcut name:"
             name="focusOnShortcut"
+            disabled={true}
             value={settings.focusOnShortcut}
             onChange={handleLinkSettingChange}
           />
           <LinkInput 
             label="Focus off shortcut name:"
             name="focusOffShortcut"
+            disabled={true}
             value={settings.focusOffShortcut}
             onChange={handleLinkSettingChange}
           />

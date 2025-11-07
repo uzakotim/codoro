@@ -167,6 +167,28 @@ app.on('window-all-closed', () => {
   }
 });
 
+// Disable DND on app quit (macOS)
+app.on('before-quit', async (event) => {
+    if (process.platform === 'darwin') {
+      try {
+        console.log('Disabling Do Not Disturb before quitting...');
+        const { execFile } = require('child_process');
+        const { promisify } = require('util');
+        const execFileAsync = promisify(execFile);
+        
+        await execFileAsync('osascript', [
+          '-e',
+          `tell application "Shortcuts Events" to run the shortcut "${ALLOWED_SHORTCUTS.disableDND}"`
+        ], { timeout: 5000 });
+        
+        console.log('Successfully disabled Do Not Disturb.');
+      } catch (error) {
+        console.error('Failed to disable Do Not Disturb:', error);
+      }
+    }
+  }
+);
+
 // IPC handler example (kept for completeness)
 
 ipcMain.handle('get-data', (_, key, defaultValue) => loadData(key, defaultValue));

@@ -3,11 +3,13 @@ export function LinkInput ({
   label, 
   name, 
   value, 
+  disabled,
   onChange 
 }: { 
   label: string; 
   name: string; 
-  value: string; 
+  value: string;
+  disabled?: boolean; 
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
 
@@ -16,6 +18,7 @@ export function LinkInput ({
       {label}
       <div className="flex items-center mt-1 justify-center space-x-2">
         <input
+          disabled={disabled}
           type="text"
           name={name}
           value={value}
