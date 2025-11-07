@@ -6,6 +6,11 @@
   </tr>
 </table>
 
+## Demo
+
+<p align="center">
+  <img src="./resources/demo.png" width="600" height="400" alt="Codoro Demo">
+</p>
 ## Usage
 
 ### Install Dependencies
