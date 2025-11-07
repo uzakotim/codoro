@@ -1,5 +1,5 @@
 
-<p align="center" style="background-color: black;">
+<p align="center" style="background-color: black;" width="100%" height="100%">
   <img src="./resources/logo.png" alt="Codoro Logo" width="150" height="150">
 </p>
 <h1 align="center">Codoro</h1> 
