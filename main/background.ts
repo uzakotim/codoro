@@ -18,7 +18,7 @@ const ALLOWED_EDITORS: Record<string, { darwin: string; win32: string; linux: st
   'Vim': { darwin: 'Vim', win32: 'gvim.exe', linux: 'vim' },
   'Emacs': { darwin: 'Emacs', win32: 'emacs.exe', linux: 'emacs' },
   'Notepad++': { darwin: 'Notepad++', win32: 'notepad++.exe', linux: 'notepadqq' },
-  'Xcode': { darwin: 'Xcode', win32: '', linux: '' },
+  'XCode': { darwin: 'XCode', win32: '', linux: '' },
   'Eclipse': { darwin: 'Eclipse', win32: 'eclipse.exe', linux: 'eclipse' },
   'NetBeans': { darwin: 'NetBeans', win32: 'netbeans.exe', linux: 'netbeans' },
   'PhpStorm': { darwin: 'PhpStorm', win32: 'phpstorm.exe', linux: 'phpstorm' },
