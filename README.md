@@ -1,7 +1,7 @@
 
-<table align="center" border="0">
+<table>
   <tr>
-    <td><img src="./resources/logo.png" alt="Codoro Logo" width="150" height="150"></td>
+    <td><img src="./resources/logo.png" alt="Codoro Logo" width="80" height="80"></td>
     <td><h1>Codoro</h1></td>
   </tr>
 </table>
