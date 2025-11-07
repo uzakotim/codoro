@@ -16,6 +16,8 @@ or using npm
 
 ### Configure shortcuts for Focus mode
 
+**Note**: Focus mode shortcuts are currently supported on macOS only.
+
 3.Open the Shortcuts app
 
 In macOS Shortcuts App
@@ -40,4 +42,3 @@ or
 or
 
 ```npm run build```
-
