@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import { getData, setData, deleteData } from './helpers';
+import { getData, setData, deleteData, launchEditor, enableDND, disableDND } from './helpers';
 import useSound from 'use-sound';
 
 interface TimerContextType {
@@ -22,6 +22,9 @@ const defaultSettings = {
   shortBreakDuration: 5 * 60,  // 5 minutes
   longBreakDuration: 15 * 60, // 15 minutes
   pomodorosBeforeLongBreak: 4,
+  codeEditor: 'Visual Studio Code', // default code editor command
+  focusOnShortcut: 'Enable Do Not Disturb',
+  focusOffShortcut: 'Disable Do Not Disturb',
 };
 
 export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
@@ -96,8 +99,15 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [currentPhase, settings]); // Depend on currentPhase and settings
 
   const startTimer = useCallback(() => {
+    if (currentPhase === 'pomodoro') {
+      launchEditor(settings.codeEditor); // Launch code editor when starting a pomodoro
+      enableDND(settings.focusOnShortcut); // Enable Do Not Disturb
+    }
+    else {
+      disableDND(settings.focusOffShortcut); // Disable Do Not Disturb on breaks
+    }
     setIsRunning(true);
-  }, []);
+  }, [settings, currentPhase]);
 
   const pauseTimer = useCallback(() => {
     setIsRunning(false);
@@ -160,6 +170,9 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
       shortBreakDuration: newSettings.shortBreakDuration || defaultSettings.shortBreakDuration,
       longBreakDuration: newSettings.longBreakDuration || defaultSettings.longBreakDuration,
       pomodorosBeforeLongBreak: newSettings.pomodorosBeforeLongBreak || defaultSettings.pomodorosBeforeLongBreak,
+      codeEditor: newSettings.codeEditor || defaultSettings.codeEditor,
+      focusOnShortcut: newSettings.focusOnShortcut || defaultSettings.focusOnShortcut,
+      focusOffShortcut: newSettings.focusOffShortcut || defaultSettings.focusOffShortcut,
     };
     setSettings(updatedSettings);
     // The useEffect dependent on [currentPhase, settings] will handle timer update

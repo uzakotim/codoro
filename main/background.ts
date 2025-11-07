@@ -4,7 +4,33 @@ import { saveData, loadData, deleteData } from './storage';
 import fs from 'fs';
 let tray: Tray | null = null;
 let popupWindow: BrowserWindow | null = null;
-
+import { exec } from 'child_process';
+import { promisify } from 'util';
+const execAsync = promisify(exec);
+// Whitelist of allowed editors with their process names per platform
+const ALLOWED_EDITORS: Record<string, { darwin: string; win32: string; linux: string }> = {
+  'Visual Studio Code': { darwin: 'Code', win32: 'Code.exe', linux: 'code' },
+  'Sublime Text': { darwin: 'Sublime Text', win32: 'sublime_text.exe', linux: 'subl' },
+  'Atom': { darwin: 'Atom', win32: 'atom.exe', linux: 'atom' },
+  'WebStorm': { darwin: 'WebStorm', win32: 'webstorm.exe', linux: 'webstorm' },
+  'IntelliJ IDEA': { darwin: 'IntelliJ IDEA', win32: 'idea.exe', linux: 'idea' },
+  'PyCharm': { darwin: 'PyCharm', win32: 'pycharm.exe', linux: 'pycharm' },
+  'Vim': { darwin: 'Vim', win32: 'gvim.exe', linux: 'vim' },
+  'Emacs': { darwin: 'Emacs', win32: 'emacs.exe', linux: 'emacs' },
+  'Notepad++': { darwin: 'Notepad++', win32: 'notepad++.exe', linux: 'notepadqq' },
+  'Xcode': { darwin: 'Xcode', win32: '', linux: '' },
+  'Eclipse': { darwin: 'Eclipse', win32: 'eclipse.exe', linux: 'eclipse' },
+  'NetBeans': { darwin: 'NetBeans', win32: 'netbeans.exe', linux: 'netbeans' },
+  'PhpStorm': { darwin: 'PhpStorm', win32: 'phpstorm.exe', linux: 'phpstorm' },
+  'RubyMine': { darwin: 'RubyMine', win32: 'rubymine.exe', linux: 'rubymine' },
+  'CLion': { darwin: 'CLion', win32: 'clion.exe', linux: 'clion' },
+  'GoLand': { darwin: 'GoLand', win32: 'goland.exe', linux: 'goland' },
+  // Add more editors as needed
+};
+const ALLOWED_SHORTCUTS = {
+  enableDND: 'Enable Do Not Disturb',
+  disableDND: 'Disable Do Not Disturb'
+};
 const isProd = process.env.NODE_ENV === 'production';
 // Define the target Next.js page path
 const TARGET_PAGE = 'home';
@@ -146,6 +172,117 @@ app.on('window-all-closed', () => {
 ipcMain.handle('get-data', (_, key, defaultValue) => loadData(key, defaultValue));
 ipcMain.handle('set-data', (_, key, value) => saveData(key, value));
 ipcMain.handle('delete-data', (_, key) => deleteData(key));
+
+ipcMain.handle('launch-editor', async (event, appName: string) => {
+  
+  try {
+    if (!appName) throw new Error('App name not provided');
+    
+    // Validate against whitelist
+    const editorConfig = ALLOWED_EDITORS[appName];
+    if (!editorConfig) {
+      throw new Error(`Editor "${appName}" is not in the allowed list`);
+    }
+    console.log(`Request to launch editor: ${appName}`);
+    const platform = process.platform as 'darwin' | 'win32' | 'linux';
+    const processName = editorConfig[platform];
+    
+    // Check if already running (platform-specific)
+    let isRunning = false;
+    try {
+      if (platform === 'darwin' || platform === 'linux') {
+        const { stdout } = await execAsync(`pgrep -x "${processName}"`, { timeout: 5000 });
+        isRunning = !!stdout.trim();
+      } else if (platform === 'win32') {
+        const { stdout } = await execAsync(`tasklist /FI "IMAGENAME eq ${processName}" /NH`, { timeout: 5000 });
+        isRunning = stdout.includes(processName);
+      }
+    } catch (err) {
+      // pgrep returns non-zero if process not found
+      isRunning = false;
+    }
+    
+    if (isRunning) {
+      console.log(`${appName} is already running.`);
+      return 'already-running';
+    }
+    
+    // Launch app (platform-specific)
+    console.log(`Launching ${appName}...`);
+    if (platform === 'darwin') {
+      await execAsync(`open -a "${appName}"`, { timeout: 10000 });
+    } else if (platform === 'win32') {
+      await execAsync(`start "" "${appName}"`, { timeout: 10000 });
+    } else if (platform === 'linux') {
+      await execAsync(`"${processName}" &`, { timeout: 10000 });
+    }
+    
+    return 'launched';
+  } catch (error) {
+    console.error(`Failed to launch ${appName}:`, error);
+    throw error;
+  }
+});
+ipcMain.handle('set-dnd', async (event, onFocuseName?: string) => {
+  try {
+    if (process.platform !== 'darwin') {
+      throw new Error('Do Not Disturb shortcuts are only supported on macOS');
+    }
+    // Validate against whitelist or use default
+    const shortcutName = onFocuseName && Object.values(ALLOWED_SHORTCUTS).includes(onFocuseName)
+      ? onFocuseName
+      : ALLOWED_SHORTCUTS.enableDND;
+    
+    console.log(`Running shortcut: ${shortcutName}`);
+    
+    // Use execFile with array args to prevent injection
+    const { execFile } = require('child_process');
+    const { promisify } = require('util');
+    const execFileAsync = promisify(execFile);
+    
+    await execFileAsync('osascript', [
+      '-e',
+      `tell application "Shortcuts Events" to run the shortcut "${shortcutName}"`
+    ], { timeout: 5000 });
+    
+    console.log(`Successfully ran shortcut "${shortcutName}"`);
+    return { success: true };
+  } catch (error) {
+    console.error(`Failed to run shortcut:`, error);
+    throw error;
+  }
+});
+ipcMain.handle('disable-dnd', async (event,offFocusName?: string) => {
+  try {
+    if (process.platform !== 'darwin') {
+      throw new Error('Do Not Disturb shortcuts are only supported on macOS');
+    }
+    // Validate against whitelist or use default
+    const shortcutName = offFocusName && Object.values(ALLOWED_SHORTCUTS).includes(offFocusName)
+      ? offFocusName
+      : ALLOWED_SHORTCUTS.disableDND;
+    
+    console.log(`Running shortcut: ${shortcutName}`);
+    
+    // Use execFile with array args to prevent injection
+    const { execFile } = require('child_process');
+    const { promisify } = require('util');
+    const execFileAsync = promisify(execFile);
+    
+    await execFileAsync('osascript', [
+      '-e',
+      `tell application "Shortcuts Events" to run the shortcut "${shortcutName}"`
+    ], { timeout: 5000 });
+    
+    console.log(`Successfully ran shortcut "${shortcutName}"`);
+    return { success: true };
+  } catch (error) {
+    console.error(`Failed to run shortcut:`, error);
+    throw error;
+  }
+});
+
+
 
 ipcMain.on('message', (event, arg) => {
   event.reply('message', `${arg} World!`);

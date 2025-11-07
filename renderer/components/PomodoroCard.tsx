@@ -1,7 +1,8 @@
 import React, { useEffect, useCallback } from 'react';
 import { useTimer } from '../context/TimerContext';
-import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon } from 'lucide-react';
+import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon, Wrench } from 'lucide-react';
 import { DurationInput } from './DurationInput';
+import { LinkInput } from './LinkInput';
 const PomodoroCard = () => {
   const {
     timer,
@@ -66,6 +67,7 @@ const PomodoroCard = () => {
 
   // Simplified settings display/toggle for a compact card
   const [showSettings, setShowSettings] = React.useState(false);
+  const [showLinkSettings, setShowLinkSettings] = React.useState(false);
 
   const handleSettingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -74,10 +76,17 @@ const PomodoroCard = () => {
       [name]: parseInt(value, 10) * 60 || 0,
     });
   };
+  const handleLinkSettingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    updateSettings({
+      ...settings,
+      [name]: value,
+    });
+  }
 
   return (
       <div className="relative w-full max-w-sm backdrop-filter backdrop-blur-lg p-6 md:p-8 flex flex-col gap-6 items-center transform transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-[1.01]"> 
-        {!showSettings ? (
+        {!showSettings && !showLinkSettings && (
         <div className="w-full flex flex-col items-center gap-6">
           {/* Radial progress bar */}
           <div className="relative size-60 flex flex-col items-center">
@@ -130,16 +139,29 @@ const PomodoroCard = () => {
           </div>
 
           <button
-            onClick={() => setShowSettings(!showSettings)}
+            onClick={() => {
+              setShowSettings(!showSettings)
+              setShowLinkSettings(false)
+            }}
             className="absolute top-4 right-4 p-2 rounded-full bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
             aria-label="Toggle settings"
           >
             <SettingsIcon size={20} />
           </button>
+          <button
+            onClick={() => {
+              setShowSettings(false);
+              setShowLinkSettings(!showLinkSettings);
+           }}
+            className="absolute top-4 left-4 p-2 rounded-full bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+            aria-label="Toggle link settings"
+          >
+            <Wrench size={20} />
+          </button>
       </div>
-    )
-    :
-    (
+    )}
+    {showSettings &&
+      (
         <div className="absolute top-0 left-0 w-full h-full p-6 flex flex-col items-center justify-center gap-4 animate-fade-in z-10">
           <h3 className="text-2xl font-bold text-white mb-1">Timer Settings</h3>
           <DurationInput 
@@ -168,7 +190,39 @@ const PomodoroCard = () => {
             Close
           </button>
         </div>
-    )}
+      )
+    }
+    {showLinkSettings &&
+      (
+        <div className="absolute top-0 left-0 w-full h-full p-6 flex flex-col items-center justify-center gap-4 animate-fade-in z-10">
+          <h3 className="text-2xl font-bold text-white mb-1">Links Settings</h3>
+          <LinkInput 
+            label="Name of a code editor to open:"
+            name="codeEditor"
+            value={settings.codeEditor}
+            onChange={handleLinkSettingChange}
+          />
+          <LinkInput 
+            label="Focus on shortcut name:"
+            name="focusOnShortcut"
+            value={settings.focusOnShortcut}
+            onChange={handleLinkSettingChange}
+          />
+          <LinkInput 
+            label="Focus off shortcut name:"
+            name="focusOffShortcut"
+            value={settings.focusOffShortcut}
+            onChange={handleLinkSettingChange}
+          />
+          <button
+            onClick={() => setShowLinkSettings(false)}
+            className="px-6 py-2 rounded-2xl border-2 border-orange-500 text-white font-bold text-md  hover:border-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
+          >
+            Close
+          </button>
+        </div>
+      )
+    }
     </div>
   );
 };
