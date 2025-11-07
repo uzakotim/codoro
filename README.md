@@ -11,6 +11,7 @@
 <p align="center">
   <img src="./resources/demo.png"  alt="Codoro Demo">
 </p>
+
 ## Usage
 
 ### Install Dependencies
