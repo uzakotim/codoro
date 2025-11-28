@@ -7,6 +7,7 @@ let popupWindow: BrowserWindow | null = null;
 import { exec } from 'child_process';
 import { promisify } from 'util';
 const execAsync = promisify(exec);
+
 // Whitelist of allowed editors with their process names per platform
 const ALLOWED_EDITORS: Record<string, { darwin: string; win32: string; linux: string }> = {
   'Visual Studio Code': { darwin: 'Code', win32: 'Code.exe', linux: 'code' },
@@ -37,69 +38,77 @@ const TARGET_PAGE = 'home';
 
 async function createPopupWindow() {
   const devPort = process.argv[2] || 8888;
-  popupWindow = new BrowserWindow({
-    width: 300,
-    height: 400,
-    show: false,
-    frame: false,
-    resizable: false,
-    alwaysOnTop: true,
-    skipTaskbar: true,
-    transparent: true,
-    vibrancy: 'popover',
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
-  if (isProd) {
-    await popupWindow.loadURL('app://./home');
-  } else {
-    const port = process.argv[2]
-    await popupWindow.loadURL(`http://localhost:${port}/home`)
-    // popupWindow.webContents.openDevTools()
-  }
-  // Hide the popup when it loses focus (blurs)
-  popupWindow.on('blur', () => popupWindow?.hide());
+      popupWindow = new BrowserWindow({
+      width: 320,
+      height: 420,
+      show: false,
+      frame: false,
+      resizable: false,
+      alwaysOnTop: true,
+      skipTaskbar: true,
+      transparent: true,        
+      vibrancy: 'popover',   
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        contextIsolation: true,
+        nodeIntegration: false,
+      },
+    });
+    if (isProd) {
+      await popupWindow.loadURL('app://./home');
+    } else {
+      const port = process.argv[2]
+      await popupWindow.loadURL(`http://localhost:${port}/home`)
+      // popupWindow.webContents.openDevTools()
+    }
+    // Hide the popup when it loses focus (blurs)
+    popupWindow.on('blur', () => popupWindow?.hide());
 }
 
 /**
  * Toggles the visibility and position of the popup window relative to the tray icon.
  * @param bounds The bounds of the tray icon.
  */
-function togglePopup(bounds: Electron.Rectangle) {
-  if (!popupWindow) return;
+function togglePopup(bounds?: Electron.Rectangle) {
+  if (!popupWindow || !tray) return;
+
+  // Try event bounds → tray bounds → fallback (Linux)
+  let trayBounds = bounds && bounds.width ? bounds : tray.getBounds();
+
+  // If still zero (Linux GNOME/KDE), fallback to cursor point
+  if (!trayBounds || trayBounds.x === 0 && trayBounds.y === 0) {
+    const cursor = screen.getCursorScreenPoint();
+    trayBounds = {
+      x: cursor.x,
+      y: cursor.y,
+      width: 24,
+      height: 24
+    };
+  }
 
   const { width, height } = popupWindow.getBounds();
-
-  // Calculate the position: centered horizontally relative to the tray icon
-  const trayX = Math.round(bounds.x + bounds.width / 2 - width / 2);
-  // Position below the tray icon, plus a small margin (4px)
-  let trayY = Math.round(bounds.y + bounds.height + 4);
-
   const display = screen.getPrimaryDisplay();
   const screenHeight = display.workAreaSize.height;
 
-  // Handle case where the tray is at the bottom of the screen (e.g., Windows/Linux)
-  // or if the calculated position is near the edge, by placing it above the tray.
-  if (trayY + height > screenHeight) {
-    trayY = Math.round(bounds.y - height - 4);
-  }
+  // Center horizontally on tray icon
+  const trayX = Math.round(trayBounds.x + trayBounds.width / 2 - width / 2);
 
-  // Ensure the position is valid, adjusting for top or bottom placement
-  const y = trayY > 0 ? trayY : screenHeight - height - bounds.height - 10;
+  // Position below tray icon
+  let trayY = Math.round(trayBounds.y + trayBounds.height + 4);
+
+  // If tray is bottom-edge (Linux/Panels)
+  if (trayY + height > screenHeight) {
+    trayY = trayBounds.y - height - 4;
+  }
 
   if (popupWindow.isVisible()) {
     popupWindow.hide();
   } else {
-    popupWindow.setPosition(trayX, y, false);
+    popupWindow.setPosition(trayX, trayY);
     popupWindow.show();
     popupWindow.focus();
   }
 }
-
-
 /**
  * Creates the system tray icon and attaches the click handler.
  */
@@ -114,19 +123,40 @@ function createTray() {
   }
 
   // Create the native image, enabling template image for better dark mode support on macOS
-  const trayIcon = nativeImage.createFromPath(iconPath).resize({ width: 24, height: 24 });
-  trayIcon.setTemplateImage(true);
+  if (process.platform === 'linux') {
+    const trayIcon = nativeImage.createFromPath(iconPath).resize({ width: 96, height: 96 });
+    trayIcon.setTemplateImage(true);
 
-  if (trayIcon.isEmpty()) {
-    console.error('❌ Tray icon failed to load:', iconPath);
-    return;
+    if (trayIcon.isEmpty()) {
+      console.error('❌ Tray icon failed to load:', iconPath);
+      return;
+    }
+    tray = new Tray(trayIcon);
+    tray.setToolTip('Codoro');
+
+    // Attach the toggle function to the tray click event
+    tray.on('click', (event, bounds) => {
+      togglePopup(bounds || tray.getBounds());
+    });
   }
+  else
+  {
+    const trayIcon = nativeImage.createFromPath(iconPath).resize({ width: 24, height: 24 });
+    trayIcon.setTemplateImage(true);
 
-  tray = new Tray(trayIcon);
-  tray.setToolTip('My Tray App');
+    if (trayIcon.isEmpty()) {
+      console.error('❌ Tray icon failed to load:', iconPath);
+      return;
+    }
+    tray = new Tray(trayIcon);
+    tray.setToolTip('Codoro');
 
-  // Attach the toggle function to the tray click event
-  tray.on('click', (_event, bounds) => togglePopup(bounds));
+    // Attach the toggle function to the tray click event
+    tray.on('click', (event, bounds) => {
+      togglePopup(bounds || tray.getBounds());
+    });
+
+  }
   console.log('✅ Tray icon created');
 }
 

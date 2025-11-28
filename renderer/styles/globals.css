@@ -5,9 +5,18 @@
 
 /* styles/globals.css or page-specific CSS */
 html, body, #__next {
-  height: 100%;
+  overflow: hidden;
   width: 100%;
+  height: 100%;
   margin: 0;
+  padding: 0;
+}
+
+
+#popup-container {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30, 30, 30, 0.85);
 }
 @layer utilities {
   input[type="number"]::-webkit-inner-spin-button,

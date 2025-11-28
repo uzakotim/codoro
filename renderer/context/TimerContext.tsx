@@ -101,10 +101,14 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   const startTimer = useCallback(() => {
     if (currentPhase === 'pomodoro') {
       launchEditor(settings.codeEditor); // Launch code editor when starting a pomodoro
-      enableDND(settings.focusOnShortcut); // Enable Do Not Disturb
+      // check if on mac os
+      if (process.platform === 'darwin') {
+        enableDND(settings.focusOnShortcut); // Enable Do Not Disturb
+      }
     }
     else {
-      disableDND(settings.focusOffShortcut); // Disable Do Not Disturb on breaks
+      if (process.platform === 'darwin')
+        disableDND(settings.focusOffShortcut); // Disable Do Not Disturb on breaks
     }
     setIsRunning(true);
   }, [settings, currentPhase]);
