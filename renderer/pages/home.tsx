@@ -5,7 +5,7 @@ import PomodoroCard from '../components/PomodoroCard';
 export default function HomePage() {
   return (
      <TimerProvider>
-      <div className="w-full h-full flex items-center justify-center">
+      <div className="w-full h-full flex items-center justify-center bg-gray-800/20">
           <PomodoroCard />
       </div>
     </TimerProvider>

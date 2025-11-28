@@ -202,6 +202,7 @@ const PomodoroCard = () => {
             value={settings.codeEditor}
             onChange={handleLinkSettingChange}
           />
+          {process.platform === 'darwin' && 
           <LinkInput 
             label="Focus on shortcut name:"
             name="focusOnShortcut"
@@ -209,6 +210,8 @@ const PomodoroCard = () => {
             value={settings.focusOnShortcut}
             onChange={handleLinkSettingChange}
           />
+          }
+          {process.platform === 'darwin' && 
           <LinkInput 
             label="Focus off shortcut name:"
             name="focusOffShortcut"
@@ -216,6 +219,7 @@ const PomodoroCard = () => {
             value={settings.focusOffShortcut}
             onChange={handleLinkSettingChange}
           />
+          }
           <button
             onClick={() => setShowLinkSettings(false)}
             className="px-6 py-2 rounded-2xl border-2 border-orange-500 text-white font-bold text-md  hover:border-orange-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 focus:ring-opacity-75"
