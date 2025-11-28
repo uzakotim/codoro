@@ -4,6 +4,7 @@ import { Play, Pause, RotateCcw, FastForward, Settings as SettingsIcon, Wrench }
 import { DurationInput } from './DurationInput';
 import { LinkInput } from './LinkInput';
 const PomodoroCard = () => {
+  // find current os version
   const {
     timer,
     isRunning,
@@ -54,6 +55,27 @@ const PomodoroCard = () => {
     console.log(`Playing ${type} sound!`);
   }, []);
 
+  const [os, setOs] = React.useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const platform = window.navigator.platform;
+      let detectedOs = 'Unknown';
+
+      if (platform.includes('Mac')) {
+        detectedOs = 'macOS';
+      } else if (platform.includes('Win')) {
+        detectedOs = 'Windows';
+      } else if (platform.includes('Linux')) {
+        detectedOs = 'Linux';
+      } else if (platform.includes('iPhone') || platform.includes('iPad') || platform.includes('iPod')) {
+        detectedOs = 'iOS';
+      } else if (platform.includes('Android')) {
+        detectedOs = 'Android';
+      }
+      setOs(detectedOs);
+    }
+  }, []);
   useEffect(() => {
     if (timer === 0 && isRunning) {
       playSound('ding');
@@ -202,7 +224,7 @@ const PomodoroCard = () => {
             value={settings.codeEditor}
             onChange={handleLinkSettingChange}
           />
-          {process.platform === 'darwin' && 
+          {os === 'macOS' && 
           <LinkInput 
             label="Focus on shortcut name:"
             name="focusOnShortcut"
@@ -211,7 +233,7 @@ const PomodoroCard = () => {
             onChange={handleLinkSettingChange}
           />
           }
-          {process.platform === 'darwin' && 
+          {os === 'macOS' && 
           <LinkInput 
             label="Focus off shortcut name:"
             name="focusOffShortcut"

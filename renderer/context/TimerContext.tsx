@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback, use } from 'react';
 import { getData, setData, deleteData, launchEditor, enableDND, disableDND } from './helpers';
 import useSound from 'use-sound';
 
@@ -36,6 +36,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     const [isRunning, setIsRunning] = useState(false);
     const [pomodoroCount, setPomodoroCount] = useState(0); // Completed pomodoros in current cycle
     const [play] = useSound('/sounds/new-notification.mp3', { volume: 0.5 });
+    const [os, setOs] = useState(''); // State to hold OS type
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const resetAll = async () => {
@@ -44,6 +45,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
         setSettings(defaultSettings);
         setCompletedPomodoros([]);
     };
+    
 
 
     useEffect(() => {
@@ -71,6 +73,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Effect to manage timer countdown
   useEffect(() => {
+    
     if (isRunning && timer > 0) {
       intervalRef.current = setInterval(() => {
         setTimer((prev) => prev - 1);
@@ -98,20 +101,26 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     resetTimer(); // Ensure timer reflects new settings or current phase initial duration
   }, [currentPhase, settings]); // Depend on currentPhase and settings
 
+  useEffect(() => {
+    const platform = window.navigator.platform;
+    const os_now = platform.startsWith('Mac') ? 'macOS' : platform.startsWith('Win') ? 'Windows' : 'Linux';
+    setOs(os_now);
+  }, []);
   const startTimer = useCallback(() => {
     if (currentPhase === 'pomodoro') {
       launchEditor(settings.codeEditor); // Launch code editor when starting a pomodoro
       // check if on mac os
-      if (process.platform === 'darwin') {
+      if (os === 'macOS') {
         enableDND(settings.focusOnShortcut); // Enable Do Not Disturb
       }
     }
     else {
-      if (process.platform === 'darwin')
+      if (os === 'macOS') {
         disableDND(settings.focusOffShortcut); // Disable Do Not Disturb on breaks
     }
+    }
     setIsRunning(true);
-  }, [settings, currentPhase]);
+  }, [settings, currentPhase, os]);
 
   const pauseTimer = useCallback(() => {
     setIsRunning(false);
