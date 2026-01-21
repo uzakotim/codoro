@@ -107,7 +107,7 @@ const PomodoroCard = () => {
   }
 
   return (
-      <div className="relative w-full max-w-sm backdrop-filter backdrop-blur-lg p-6 md:p-8 flex flex-col gap-6 items-center transform transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-[1.01]"> 
+      <div className="relative w-full max-w-sm h-full p-6 md:p-8 flex flex-col gap-6 items-center transform transition-all duration-300 ease-in-out hover:shadow-3xl hover:scale-[1.01]"> 
         {!showSettings && !showLinkSettings && (
         <div className="w-full flex flex-col items-center gap-6">
           {/* Radial progress bar */}
