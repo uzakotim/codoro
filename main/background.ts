@@ -10,6 +10,8 @@ const execAsync = promisify(exec);
 
 // Whitelist of allowed editors with their process names per platform
 const ALLOWED_EDITORS: Record<string, { darwin: string; win32: string; linux: string }> = {
+  'Antigravity': { darwin: 'Antigravity', win32: 'Antigravity.exe', linux: 'Antigravity' },
+  'Void': { darwin: 'Void', win32: 'Void.exe', linux: 'Void' },
   'Visual Studio Code': { darwin: 'Code', win32: 'Code.exe', linux: 'code' },
   'Sublime Text': { darwin: 'Sublime Text', win32: 'sublime_text.exe', linux: 'subl' },
   'Atom': { darwin: 'Atom', win32: 'atom.exe', linux: 'atom' },
